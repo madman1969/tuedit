@@ -1,4 +1,3 @@
-
 namespace tuitest
 {
     using Terminal.Gui;
@@ -11,68 +10,75 @@ namespace tuitest
 
         public TabEdit()
         {
-            var menu = new MenuBar (new MenuBarItem [] 
-            {
-                new MenuBarItem ("_File", new MenuItem [] 
+            var menu = new MenuBar(
+                new MenuBarItem[]
                 {
-                    new MenuItem ("_New", "", () => New()),
-                    new MenuItem ("_Open", "", () => Open()),
-                    new MenuItem ("_Save", "", () => Save()),
-                    new MenuItem ("Save _As", "", () => SaveAs()),
-                    new MenuItem ("_Close", "", () => Close()),
-                    new MenuItem ("_Quit", "", () => Quit()),
-                })
-            });
+                    new MenuBarItem(
+                        "_File",
+                        new MenuItem[]
+                        {
+                            new MenuItem("_New", "", () => New()),
+                            new MenuItem("_Open", "", () => Open()),
+                            new MenuItem("_Save", "", () => Save()),
+                            new MenuItem("Save _As", "", () => SaveAs()),
+                            new MenuItem("_Close", "", () => Close()),
+                            new MenuItem("_Quit", "", () => Quit()),
+                        }
+                    )
+                }
+            );
 
-            Add (menu);
+            Add(menu);
 
-            tabView = new TabView () 
+            tabView = new TabView()
             {
                 X = 0,
                 Y = 1,
-                Width = Dim.Fill (),
-                Height = Dim.Fill (1),
+                Width = Dim.Fill(),
+                Height = Dim.Fill(1),
             };
 
             tabView.TabClicked += TabView_TabClicked;
 
             tabView.Style.ShowBorder = true;
-            tabView.ApplyStyleChanges ();
+            tabView.ApplyStyleChanges();
 
-            Add (tabView);
+            Add(tabView);
 
-            var lenStatusItem = new StatusItem (Key.CharMask, "Len: ", null);
-            var siCursorPosition = new StatusItem (Key.Null, "", null);
+            var lenStatusItem = new StatusItem(Key.CharMask, "Len: ", null);
+            var siCursorPosition = new StatusItem(Key.Null, "", null);
 
-            var statusBar = new StatusBar (new StatusItem [] 
-            {
-                siCursorPosition,
-                new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+            var statusBar = new StatusBar(
+                new StatusItem[]
+                {
+                    siCursorPosition,
+                    new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+                    // These shortcut keys don't seem to work correctly in linux
+                    //new StatusItem(Key.CtrlMask | Key.N, "~^O~ Open", () => Open()),
+                    //new StatusItem(Key.CtrlMask | Key.N, "~^N~ New", () => New()),
 
-                // These shortcut keys don't seem to work correctly in linux 
-                //new StatusItem(Key.CtrlMask | Key.N, "~^O~ Open", () => Open()),
-                //new StatusItem(Key.CtrlMask | Key.N, "~^N~ New", () => New()),
+                    new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", () => Save()),
+                    new StatusItem(Key.CtrlMask | Key.W, "~^W~ Close", () => Close()),
+                    lenStatusItem,
+                }
+            );
 
-                new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", () => Save()),
-                new StatusItem(Key.CtrlMask | Key.W, "~^W~ Close", () => Close()),
-                lenStatusItem,
-            });
+            tabView.SelectedTabChanged += (s, e) =>
+                lenStatusItem.Title = $"Len:{(e.NewTab?.View?.Text?.Length ?? 0)}";
 
-            tabView.SelectedTabChanged += (s, e) => lenStatusItem.Title = $"Len:{(e.NewTab?.View?.Text?.Length ?? 0)}";
+            Add(statusBar);
 
-            Add (statusBar);
-
-            New ();
+            New();
         }
 
         private void TabView_TabClicked(object sender, TabView.TabMouseEventArgs e)
-        {          
-            // Reset the cursor saved cursor ...  
+        {
+            // Reset the cursor saved cursor ...
             if (e.Tab != null)
             {
                 var editor = e.Tab.View as TextView;
                 var tmp = e.Tab as OpenedFile;
-                editor.CursorPosition = tmp.cursorPos;                
+                editor.CursorPosition = tmp.cursorPos;
                 editor.DesiredCursorVisibility = CursorVisibility.Underline;
             }
 
@@ -86,19 +92,19 @@ namespace tuitest
 
             if (e.Tab == null)
             {
-                items = new MenuBarItem(new MenuItem[] 
-                {
-                    new MenuItem ($"Open", "", () => Open()),
-                });
-
+                items = new MenuBarItem(
+                    new MenuItem[] { new MenuItem($"Open", "", () => Open()), }
+                );
             }
             else
             {
-                items = new MenuBarItem(new MenuItem[] 
-                {
-                    new MenuItem ($"Save", "", () => Save(e.Tab)),
-                    new MenuItem ($"Close", "", () => Close(e.Tab)),
-                });
+                items = new MenuBarItem(
+                    new MenuItem[]
+                    {
+                        new MenuItem($"Save", "", () => Save(e.Tab)),
+                        new MenuItem($"Close", "", () => Close(e.Tab)),
+                    }
+                );
             }
 
             var contextMenu = new ContextMenu(e.MouseEvent.X + 1, e.MouseEvent.Y + 1, items);
@@ -128,12 +134,16 @@ namespace tuitest
 
             if (tab.UnsavedChanges)
             {
-
-                int result = MessageBox.Query("Save Changes", $"Save changes to {tab.Text.ToString().TrimEnd('*')}", "Yes", "No", "Cancel");
+                int result = MessageBox.Query(
+                    "Save Changes",
+                    $"Save changes to {tab.Text.ToString().TrimEnd('*')}",
+                    "Yes",
+                    "No",
+                    "Cancel"
+                );
 
                 if (result == -1 || result == 2)
                 {
-
                     // user cancelled
                     return;
                 }
@@ -157,10 +167,8 @@ namespace tuitest
 
             if (!open.Canceled)
             {
-
                 foreach (var path in open.FilePaths)
                 {
-
                     if (string.IsNullOrEmpty(path) || !File.Exists(path))
                     {
                         return;
@@ -185,7 +193,7 @@ namespace tuitest
                 Width = Dim.Fill(),
                 Height = Dim.Fill(),
                 Text = initialText
-            };            
+            };
 
             var tab = new OpenedFile(tabName, fileInfo, textView);
             tabView.AddTab(tab, true);
@@ -193,7 +201,6 @@ namespace tuitest
             // when user makes changes rename tab to indicate unsaved
             textView.KeyUp += (k) =>
             {
-
                 // if current text doesn't match saved text
                 var areDiff = tab.UnsavedChanges;
 
@@ -201,17 +208,14 @@ namespace tuitest
                 {
                     if (!tab.Text.ToString().EndsWith('*'))
                     {
-
                         tab.Text = tab.Text.ToString() + '*';
                         tabView.SetNeedsDisplay();
                     }
                 }
                 else
                 {
-
                     if (tab.Text.ToString().EndsWith('*'))
                     {
-
                         tab.Text = tab.Text.ToString().TrimEnd('*');
                         tabView.SetNeedsDisplay();
                     }
@@ -280,18 +284,19 @@ namespace tuitest
 
             public bool UnsavedChanges => !string.Equals(SavedText, View.Text.ToString());
 
-            public OpenedFile(string name, FileInfo file, TextView control) : base(name, control)
+            public OpenedFile(string name, FileInfo file, TextView control)
+                : base(name, control)
             {
                 File = file;
                 SavedText = control.Text.ToString();
                 control.DesiredCursorVisibility = CursorVisibility.Underline;
 
-                control.UnwrappedCursorPosition += (e) => 
+                control.UnwrappedCursorPosition += (e) =>
                 {
                     cursorPos.X = e.X;
                     cursorPos.Y = e.Y;
                     Application.Top.StatusBar.Items[0].Title = $"Ln {e.Y + 1}, Col {e.X + 1}";
-                    Application.Top.StatusBar.SetNeedsDisplay ();
+                    Application.Top.StatusBar.SetNeedsDisplay();
                 };
             }
 

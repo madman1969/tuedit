@@ -1,5 +1,5 @@
-using tuitest;
 using Terminal.Gui;
+using tuitest;
 
 Application.Init();
 Application.Top.ColorScheme = Colors.Base;
