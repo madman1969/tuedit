@@ -50,7 +50,7 @@ namespace tuiedit
                     Application.Top.StatusBar.SetNeedsDisplay();
                 };
             }
-
+             
             /// <summary>Saves the fileToEdit being edited in the TextView back to fileToEdit system</summary>
             internal void Save()
             {

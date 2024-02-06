@@ -134,7 +134,7 @@ namespace tuiedit
         }
 
         #endregion
-
+        
         #region Private Methods 
 
         /// <summary>Added a new empty openedFile to the TabView.</summary>
@@ -336,7 +336,7 @@ namespace tuiedit
             editorTab.Save();
 
             return true;
-        }
+        } 
 
         /// <summary>Forces the application to exit.</summary>
         private void Quit()
