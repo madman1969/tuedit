@@ -91,7 +91,7 @@ namespace tuiedit
             if (e.Tab != null)
             {
                 var editor = e.Tab.View as TextView;
-                var tmp = e.Tab as OpenedFile;
+                var tmp = e.Tab as OpenFileTab;
                 editor.CursorPosition = tmp.lastCursorPosition;
                 editor.DesiredCursorVisibility = CursorVisibility.Underline;
             }
@@ -134,7 +134,7 @@ namespace tuiedit
         }
 
         #endregion
-        
+
         #region Private Methods 
 
         /// <summary>Added a new empty openedFile to the TabView.</summary>
@@ -153,7 +153,7 @@ namespace tuiedit
         /// <param name="tabToClose">The openedFile to close.</param>
         private void Close(TabView.Tab tabToClose)
         {
-            var openedFile = tabToClose as OpenedFile;
+            var openedFile = tabToClose as OpenFileTab;
 
             // Bail if no file associated with editorTab ...
             if (openedFile == null)
@@ -241,7 +241,7 @@ namespace tuiedit
             };
 
             // Create new editorTab containing TextView and add to TabView ...
-            var editorTab = new OpenedFile(tabName, fileInfo, textView);
+            var editorTab = new OpenFileTab(tabName, fileInfo, textView);
             tabView.AddTab(editorTab, true);
 
             // when user makes changes rename openedFile to indicate unsaved
@@ -283,7 +283,7 @@ namespace tuiedit
         /// <param name="tabToSave">The editorTab to save.</param>
         public void Save(TabView.Tab tabToSave)
         {
-            var editorTab = tabToSave as OpenedFile;
+            var editorTab = tabToSave as OpenFileTab;
 
             // Bail if dodgy tab ...
             if (editorTab == null)
@@ -312,7 +312,7 @@ namespace tuiedit
         /// </returns>
         public bool SaveAs()
         {
-            var editorTab = tabView.SelectedTab as OpenedFile;
+            var editorTab = tabView.SelectedTab as OpenFileTab;
 
             // Bail if dodgy tab ...
             if (editorTab == null)
@@ -336,7 +336,7 @@ namespace tuiedit
             editorTab.Save();
 
             return true;
-        } 
+        }
 
         /// <summary>Forces the application to exit.</summary>
         private void Quit()
