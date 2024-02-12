@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,6 +9,19 @@
 
   <ItemGroup>
     <PackageReference Include="Terminal.Gui" Version="1.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Test Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Test Files\3dmaze.c">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Test Files\c64maze.c">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

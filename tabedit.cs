@@ -1,4 +1,4 @@
-namespace tuitest
+namespace tuiedit
 {
     using Terminal.Gui;
 
@@ -186,7 +186,7 @@ namespace tuitest
         /// <param name="fileInfo">File that was read or null if a new blank document</param>
         private void Open(string initialText, FileInfo fileInfo, string tabName)
         {
-            var textView = new TextView()
+            var textView = new SyntaxColoredTextView()
             {
                 X = 0,
                 Y = 0,
