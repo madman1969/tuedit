@@ -9,10 +9,14 @@ namespace tuiedit
     {
         #region Fields and properties
 
-        /// <summary>The last recorded cursor position</summary>
+        /// <summary>
+        /// The last recorded cursor position
+        /// </summary>
         public Point lastCursorPosition;
 
-        /// <summary>Gets or sets the fileToEdit being edited.</summary>
+        /// <summary>
+        /// Gets or sets the fileToEdit being edited.
+        /// </summary>
         /// <value>The fileToEdit being edited.</value>
         public FileInfo fileBeingEdited { get; set; }
 
@@ -22,7 +26,9 @@ namespace tuiedit
         /// <value></value>
         public string? SavedText { get; set; }
 
-        /// <summary>Gets a value indicating whether there are unsaved changes.</summary>
+        /// <summary>
+        /// Gets a value indicating whether there are unsaved changes.
+        /// </summary>
         /// <value>
         ///   <c>true</c> if unsaved changes otherwise, <c>false</c>.</value>
         public bool UnsavedChanges => !string.Equals(SavedText, View.Text.ToString());
@@ -53,7 +59,9 @@ namespace tuiedit
             };
         }
 
-        /// <summary>Saves the fileToEdit being edited in the TextView back to fileToEdit system</summary>
+        /// <summary>
+        /// Saves the fileToEdit being edited in the TextView back to fileToEdit system
+        /// </summary>
         internal void Save()
         {
             // Grab a copy of the current editor contents ...

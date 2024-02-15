@@ -2,12 +2,24 @@ namespace tuiedit
 {
     using Terminal.Gui;
 
+    /// <summary>
+    /// Edit control class definition
+    /// </summary>
+    /// <seealso cref="Terminal.Gui.Window" />
     public partial class TabEdit : Window
     {
-        TabView tabView;
+        #region Fields and properties
 
+        TabView tabView;
         private int numbeOfNewTabs = 1;
 
+        #endregion
+
+        #region Class Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TabEdit"/> class.
+        /// </summary>
         public TabEdit()
         {
             var menu = new MenuBar(
@@ -71,6 +83,13 @@ namespace tuiedit
             New();
         }
 
+        #endregion
+
+        /// <summary>
+        /// Handles the TabClicked event of the TabView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TabView.TabMouseEventArgs"/> instance containing the event data.</param>
         private void TabView_TabClicked(object sender, TabView.TabMouseEventArgs e)
         {
             // Reset the cursor saved cursor ...
@@ -113,16 +132,27 @@ namespace tuiedit
             e.MouseEvent.Handled = true;
         }
 
+        /// <summary>
+        /// Opens a new tab with an empty editor.
+        /// </summary>
         private void New()
         {
             Open("", null, $"new {numbeOfNewTabs++}");
         }
 
+        /// <summary>
+        /// Closes the currently selected tab.
+        /// </summary>
         private void Close()
         {
             Close(tabView.SelectedTab);
         }
 
+        /// <summary>
+        /// Closes the specified tab and prompts user to specify if unsaved changes
+        /// should be saved.
+        /// </summary>
+        /// <param name="tabToClose">The tab to close.</param>
         private void Close(TabView.Tab tabToClose)
         {
             var tab = tabToClose as OpenFileTab;
@@ -159,6 +189,9 @@ namespace tuiedit
             tab.View.Dispose();
         }
 
+        /// <summary>
+        /// Opens a new editor tab and prompts user for file to open.
+        /// </summary>
         private void Open()
         {
             var open = new OpenDialog("Open", "Open a file") { AllowsMultipleSelection = true };
@@ -180,7 +213,7 @@ namespace tuiedit
         }
 
         /// <summary>
-        /// Creates a new tab with initial text
+        /// Creates a new tab with initial text.
         /// </summary>
         /// <param name="initialText"></param>
         /// <param name="fileInfo">File that was read or null if a new blank document</param>
@@ -223,11 +256,18 @@ namespace tuiedit
             };
         }
 
+        /// <summary>
+        /// Saves the editor content for the currently selected tab.
+        /// </summary>
         public void Save()
         {
             Save(tabView.SelectedTab);
         }
 
+        /// <summary>
+        /// Saves the editor content of the specified tab.
+        /// </summary>
+        /// <param name="tabToSave">The tab to save.</param>
         public void Save(TabView.Tab tabToSave)
         {
             var tab = tabToSave as OpenFileTab;
@@ -246,6 +286,10 @@ namespace tuiedit
             tabView.SetNeedsDisplay();
         }
 
+        /// <summary>
+        /// Prompts the user for a file to save the current tabs editor content to.
+        /// </summary>
+        /// <returns></returns>
         public bool SaveAs()
         {
             var tab = tabView.SelectedTab as OpenFileTab;
@@ -270,6 +314,9 @@ namespace tuiedit
             return true;
         }
 
+        /// <summary>
+        /// Causes the application to exit.
+        /// </summary>
         private void Quit()
         {
             Application.RequestStop();
