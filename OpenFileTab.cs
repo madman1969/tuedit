@@ -2,7 +2,9 @@ namespace tuiedit
 {
     using Terminal.Gui;
 
-    /// <summary>Wrapper class for file being edited. Derives from TabView.Tab</summary>
+    /// <summary>
+    /// Wrapper class for file being edited. Derives from TabView.Tab
+    /// </summary>
     internal class OpenFileTab : TabView.Tab
     {
         #region Fields and properties
@@ -27,7 +29,9 @@ namespace tuiedit
 
         #endregion
 
-        /// <summary>Initializes a new instance of the <see cref="OpenFileTab" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenFileTab" /> class.
+        /// </summary>
         /// <param tabTitle="tabTitle">The tab title.</param>
         /// <param tabTitle="fileToEdit">The file to edit.</param>
         /// <param tabTitle="control">The associated TextView control.</param>
@@ -63,5 +67,4 @@ namespace tuiedit
             Text = Text.ToString().TrimEnd('*');
         }
     }
-
 }

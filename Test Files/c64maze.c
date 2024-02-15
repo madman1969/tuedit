@@ -35,6 +35,7 @@ char exity = 1;
     */
 char orientation = 0;
 
+// Is this ever used ? ...
 struct font f;
 
 /* Turn on a pixel by accessing directly to the video RAM */

@@ -2,7 +2,7 @@ namespace tuiedit
 {
     using Terminal.Gui;
 
-    public class TabEdit : Window
+    public partial class TabEdit : Window
     {
         TabView tabView;
 
@@ -77,8 +77,8 @@ namespace tuiedit
             if (e.Tab != null)
             {
                 var editor = e.Tab.View as TextView;
-                var tmp = e.Tab as OpenedFile;
-                editor.CursorPosition = tmp.cursorPos;
+                var tmp = e.Tab as OpenFileTab;
+                editor.CursorPosition = tmp.lastCursorPosition;
                 editor.DesiredCursorVisibility = CursorVisibility.Underline;
             }
 
@@ -125,7 +125,7 @@ namespace tuiedit
 
         private void Close(TabView.Tab tabToClose)
         {
-            var tab = tabToClose as OpenedFile;
+            var tab = tabToClose as OpenFileTab;
 
             if (tab == null)
             {
@@ -134,7 +134,7 @@ namespace tuiedit
 
             if (tab.UnsavedChanges)
             {
-                int result = MessageBox.Query(
+                var result = MessageBox.Query(
                     "Save Changes",
                     $"Save changes to {tab.Text.ToString().TrimEnd('*')}",
                     "Yes",
@@ -195,7 +195,7 @@ namespace tuiedit
                 Text = initialText
             };
 
-            var tab = new OpenedFile(tabName, fileInfo, textView);
+            var tab = new OpenFileTab(tabName, fileInfo, textView);
             tabView.AddTab(tab, true);
 
             // when user makes changes rename tab to indicate unsaved
@@ -230,14 +230,14 @@ namespace tuiedit
 
         public void Save(TabView.Tab tabToSave)
         {
-            var tab = tabToSave as OpenedFile;
+            var tab = tabToSave as OpenFileTab;
 
             if (tab == null)
             {
                 return;
             }
 
-            if (tab.File == null)
+            if (tab.fileBeingEdited == null)
             {
                 SaveAs();
             }
@@ -248,7 +248,7 @@ namespace tuiedit
 
         public bool SaveAs()
         {
-            var tab = tabView.SelectedTab as OpenedFile;
+            var tab = tabView.SelectedTab as OpenFileTab;
 
             if (tab == null)
             {
@@ -263,52 +263,11 @@ namespace tuiedit
                 return false;
             }
 
-            tab.File = new FileInfo(fd.FilePath.ToString());
+            tab.fileBeingEdited = new FileInfo(fd.FilePath.ToString());
             tab.Text = fd.FileName.ToString();
             tab.Save();
 
             return true;
-        }
-
-        private class OpenedFile : TabView.Tab
-        {
-            public Point cursorPos;
-
-            public FileInfo File { get; set; }
-
-            /// <summary>
-            /// The text of the tab the last time it was saved
-            /// </summary>
-            /// <value></value>
-            public string SavedText { get; set; }
-
-            public bool UnsavedChanges => !string.Equals(SavedText, View.Text.ToString());
-
-            public OpenedFile(string name, FileInfo file, TextView control)
-                : base(name, control)
-            {
-                File = file;
-                SavedText = control.Text.ToString();
-                control.DesiredCursorVisibility = CursorVisibility.Underline;
-
-                control.UnwrappedCursorPosition += (e) =>
-                {
-                    cursorPos.X = e.X;
-                    cursorPos.Y = e.Y;
-                    Application.Top.StatusBar.Items[0].Title = $"Ln {e.Y + 1}, Col {e.X + 1}";
-                    Application.Top.StatusBar.SetNeedsDisplay();
-                };
-            }
-
-            internal void Save()
-            {
-                var newText = View.Text.ToString();
-
-                System.IO.File.WriteAllText(File.FullName, newText);
-                SavedText = newText;
-
-                Text = Text.ToString().TrimEnd('*');
-            }
         }
 
         private void Quit()
